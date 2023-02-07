@@ -1,4 +1,6 @@
-import 'package:expenses/user_transaction.dart';
+import 'package:expenses/models/transaction.dart';
+import 'package:expenses/new_transaction.dart';
+import 'package:expenses/transaction_list.dart';
 import 'package:flutter/material.dart';
 
 import 'package:timezone/data/latest.dart' as tz;
@@ -9,8 +11,51 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  List<Transaction> userTransaction = [
+    Transaction(
+      id: 't2',
+      title: 'Ring',
+      amount: 58580,
+      date: DateTime.now(),
+    ),
+    Transaction(
+      id: 't1',
+      title: 'Shoes',
+      amount: 49900,
+      date: DateTime.now(),
+    ),
+  ];
+
+  void _addNewTransaction(String txTitle, double amount) {
+    final newTx = Transaction(
+      id: DateTime.now().toString(),
+      title: txTitle,
+      amount: amount,
+      date: DateTime.now(),
+    );
+    setState(() {
+      userTransaction.add(newTx);
+    });
+  }
+
+  void _startAddNewTransaction(BuildContext ctx) {
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_) {
+          return GestureDetector(
+              onTap: () {},
+              behavior: HitTestBehavior.opaque,
+              child: NewTransaction(addTransactionHandler: _addNewTransaction));
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,14 +66,16 @@ class MyApp extends StatelessWidget {
             'Expenses',
           ),
           actions: [
-            IconButton(
-              onPressed: () {},
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              icon: const Icon(
-                Icons.add_circle_outline_rounded,
-                size: 24,
+            Builder(
+              builder: (context) => IconButton(
+                onPressed: () => _startAddNewTransaction(context),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                icon: const Icon(
+                  Icons.add_circle_outline_rounded,
+                  size: 24,
+                ),
               ),
-            ),
+            )
           ],
         ),
         body: SingleChildScrollView(
@@ -50,14 +97,15 @@ class MyApp extends StatelessWidget {
                   ),
                 ),
               ),
-              const UserTransactions(),
+              TransactionList(userTransaction: userTransaction)
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: const Icon(Icons.add),
-        ),
+        floatingActionButton: Builder(
+            builder: (context) => FloatingActionButton(
+                  onPressed: () => _startAddNewTransaction(context),
+                  child: const Icon(Icons.add),
+                )),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
