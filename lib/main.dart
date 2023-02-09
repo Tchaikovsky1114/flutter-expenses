@@ -19,20 +19,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List<Transaction> userTransaction = [
-    Transaction(
-      id: 't2',
-      title: 'Ring',
-      amount: 58580,
-      date: DateTime.now(),
-    ),
-    Transaction(
-      id: 't1',
-      title: 'Shoes',
-      amount: 49900,
-      date: DateTime.now(),
-    ),
-  ];
+  List<Transaction> userTransaction = [];
 
   void _addNewTransaction(String txTitle, double amount) {
     final newTx = Transaction(
@@ -60,10 +47,39 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Expenses',
+      theme: ThemeData(
+          appBarTheme: const AppBarTheme(
+              titleTextStyle: TextStyle(
+                fontFamily: 'Wandohope',
+                fontSize: 32,
+              ),
+              actionsIconTheme: IconThemeData(
+                size: 42,
+              )),
+          primarySwatch: Colors.amber,
+          primaryColor: Colors.pink.shade400,
+          primaryColorDark: Colors.deepPurple.shade600,
+          primaryTextTheme: TextTheme(
+            titleMedium: TextStyle(
+                color: Colors.grey.shade700,
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
+            titleSmall: TextStyle(
+              color: Colors.grey.shade700,
+              fontSize: 12,
+              fontFamily: 'Quicksand',
+            ),
+          ),
+          fontFamily: 'Wandohope'),
       home: Scaffold(
         appBar: AppBar(
           title: const Text(
             'Expenses',
+            style: TextStyle(
+              fontFamily: 'Quicksand',
+              fontWeight: FontWeight.bold,
+            ),
           ),
           actions: [
             Builder(
@@ -88,11 +104,9 @@ class _MyAppState extends State<MyApp> {
                 child: Card(
                   color: Colors.blue.shade600,
                   elevation: 5,
-                  child: const Text(
+                  child: Text(
                     'CHART',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
+                    style: Theme.of(context).textTheme.titleMedium,
                     textAlign: TextAlign.center,
                   ),
                 ),
