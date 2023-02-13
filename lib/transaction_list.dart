@@ -1,6 +1,5 @@
 import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class TransactionList extends StatelessWidget {
   final List<Transaction> userTransaction;
@@ -30,55 +29,21 @@ class TransactionList extends StatelessWidget {
             )
           : ListView.builder(
               itemBuilder: (context, index) {
-                return Card(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 16,
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 1,
-                              color: Theme.of(context).primaryColorDark,
-                            ),
-                            color: Theme.of(context).primaryColor,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(4))),
+                return ListTile(
+                  leading: CircleAvatar(
+                    radius: 30,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: FittedBox(
                         child: Text(
-                          userTransaction[index].title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
+                          '${userTransaction[index].amount}원',
                         ),
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '${(userTransaction[index].amount).toInt()}원',
-                            style:
-                                Theme.of(context).primaryTextTheme.titleMedium,
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          Text(
-                            DateFormat('yy년 MM월 dd일 HH:mm')
-                                .format(userTransaction[index].date),
-                            style:
-                                Theme.of(context).primaryTextTheme.titleSmall,
-                          )
-                        ],
-                      )
-                    ],
+                    ),
+                  ),
+                  title: Text(
+                    userTransaction[index].title,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                 );
               },

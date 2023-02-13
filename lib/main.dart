@@ -1,3 +1,4 @@
+import 'package:expenses/chart.dart';
 import 'package:expenses/models/transaction.dart';
 import 'package:expenses/new_transaction.dart';
 import 'package:expenses/transaction_list.dart';
@@ -8,7 +9,7 @@ import 'package:timezone/data/latest.dart' as tz;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -31,6 +32,12 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       userTransaction.add(newTx);
     });
+  }
+
+  List<Transaction> get _recentTransaction {
+    return userTransaction.where((tx) {
+      return tx.date.isAfter(DateTime.now().subtract(const Duration(days: 7)));
+    }).toList();
   }
 
   void _startAddNewTransaction(BuildContext ctx) {
@@ -101,15 +108,7 @@ class _MyAppState extends State<MyApp> {
             children: [
               SizedBox(
                 width: double.infinity,
-                child: Card(
-                  color: Colors.blue.shade600,
-                  elevation: 5,
-                  child: Text(
-                    'CHART',
-                    style: Theme.of(context).textTheme.titleMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                ),
+                child: Chart(_recentTransaction),
               ),
               TransactionList(userTransaction: userTransaction)
             ],
