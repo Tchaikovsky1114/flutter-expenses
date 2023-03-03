@@ -66,8 +66,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    final isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final mediaQuery = MediaQuery.of(context);
+    final isLandscape = mediaQuery.orientation == Orientation.landscape;
     final appBar = AppBar(
       title: const Text(
         'Expenses',
@@ -91,8 +91,8 @@ class _MyAppState extends State<MyApp> {
       ],
     );
     final txListWidget = SizedBox(
-      height: (MediaQuery.of(context).size.height -
-              MediaQuery.of(context).padding.top -
+      height: (mediaQuery.size.height -
+              mediaQuery.padding.top -
               appBar.preferredSize.height) *
           0.7,
       child: TransactionList(
@@ -154,8 +154,8 @@ class _MyAppState extends State<MyApp> {
                 ),
               if (!isLandscape)
                 SizedBox(
-                  height: (MediaQuery.of(context).size.height -
-                          MediaQuery.of(context).padding.top -
+                  height: (mediaQuery.size.height -
+                          mediaQuery.padding.top -
                           appBar.preferredSize.height) *
                       0.3,
                   child: Chart(_recentTransaction),
@@ -164,8 +164,8 @@ class _MyAppState extends State<MyApp> {
               if (isLandscape)
                 _showChart
                     ? SizedBox(
-                        height: (MediaQuery.of(context).size.height -
-                                MediaQuery.of(context).padding.top -
+                        height: (mediaQuery.size.height -
+                                mediaQuery.padding.top -
                                 appBar.preferredSize.height) *
                             0.8,
                         child: Chart(_recentTransaction),
