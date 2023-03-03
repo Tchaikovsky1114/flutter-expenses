@@ -9,6 +9,11 @@ import 'package:timezone/data/latest.dart' as tz;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
+  // 가로모드를 사용하지 않을 때 사용한다.
+  // SystemChrome.setPreferredOrientations([
+  //   DeviceOrientation.portraitUp,
+  //   DeviceOrientation.portraitDown,
+  // ]);
   runApp(const MaterialApp(home: MyApp()));
 }
 
@@ -40,6 +45,8 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  bool _showChart = false;
+
   List<Transaction> get _recentTransaction {
     return userTransaction.where((tx) {
       return tx.date.isAfter(DateTime.now().subtract(const Duration(days: 7)));
@@ -59,6 +66,8 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
       title: const Text(
         'Expenses',
@@ -80,6 +89,16 @@ class _MyAppState extends State<MyApp> {
           ),
         )
       ],
+    );
+    final txListWidget = SizedBox(
+      height: (MediaQuery.of(context).size.height -
+              MediaQuery.of(context).padding.top -
+              appBar.preferredSize.height) *
+          0.7,
+      child: TransactionList(
+        userTransaction: userTransaction,
+        deleteTransaction: _deleteTransaction,
+      ),
     );
     return MaterialApp(
       title: 'Expenses',
@@ -118,23 +137,40 @@ class _MyAppState extends State<MyApp> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(
-                height: (MediaQuery.of(context).size.height -
-                        MediaQuery.of(context).padding.top -
-                        appBar.preferredSize.height) *
-                    0.4,
-                child: Chart(_recentTransaction),
-              ),
-              SizedBox(
-                height: (MediaQuery.of(context).size.height -
-                        MediaQuery.of(context).padding.top -
-                        appBar.preferredSize.height) *
-                    0.6,
-                child: TransactionList(
-                  userTransaction: userTransaction,
-                  deleteTransaction: _deleteTransaction,
+              if (isLandscape)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('차트 보기'),
+                    Switch(
+                      value: _showChart,
+                      onChanged: (value) {
+                        setState(() {
+                          _showChart = value;
+                        });
+                      },
+                    ),
+                  ],
                 ),
-              )
+              if (!isLandscape)
+                SizedBox(
+                  height: (MediaQuery.of(context).size.height -
+                          MediaQuery.of(context).padding.top -
+                          appBar.preferredSize.height) *
+                      0.3,
+                  child: Chart(_recentTransaction),
+                ),
+              if (!isLandscape) txListWidget,
+              if (isLandscape)
+                _showChart
+                    ? SizedBox(
+                        height: (MediaQuery.of(context).size.height -
+                                MediaQuery.of(context).padding.top -
+                                appBar.preferredSize.height) *
+                            0.8,
+                        child: Chart(_recentTransaction),
+                      )
+                    : txListWidget
             ],
           ),
         ),

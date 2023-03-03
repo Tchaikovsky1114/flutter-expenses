@@ -46,78 +46,83 @@ class _NewTransactionState extends State<NewTransaction> {
         _selectedDate = pickedDate;
       });
     });
-    print('...');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: Container(
-        height: 400,
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            TextField(
-              cursorWidth: 10,
-              decoration: const InputDecoration(
-                labelText: 'Title',
-              ),
-              controller: _titleController,
-              keyboardType: TextInputType.name,
-            ),
-            TextField(
-              cursorWidth: 10,
-              decoration: const InputDecoration(
-                labelText: 'Amount',
-              ),
-              controller: _amountController,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_) => _submitData(),
-            ),
-            SizedBox(
-              height: 80,
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      _selectedDate == null
-                          ? '날짜를 선택하지 않으셨습니다.'
-                          : '${DateFormat.y().format(_selectedDate)}년 ${DateFormat.M().format(_selectedDate)}월 ${DateFormat.d().format(_selectedDate)}일',
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: _presentDatePicker,
-                    child: Text(
-                      '[날짜 선택]',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.pinkAccent.shade200),
-                    ),
-                  )
-                ],
-              ),
-            ),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                textStyle: const TextStyle(
-                  color: Colors.white,
+    return SingleChildScrollView(
+      child: Card(
+        elevation: 2,
+        child: Container(
+          alignment: Alignment.center,
+          padding: EdgeInsets.only(
+            top: 10,
+            left: 10,
+            right: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              TextField(
+                cursorWidth: 10,
+                decoration: const InputDecoration(
+                  labelText: 'Title',
                 ),
-                elevation: 5,
+                controller: _titleController,
+                keyboardType: TextInputType.name,
               ),
-              onPressed: _submitData,
-              child: Text(
-                '추가',
-                style: Theme.of(context).primaryTextTheme.labelLarge,
+              TextField(
+                cursorWidth: 10,
+                decoration: const InputDecoration(
+                  labelText: 'Amount',
+                ),
+                controller: _amountController,
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                onSubmitted: (_) => _submitData(),
               ),
-            )
-          ],
+              SizedBox(
+                height: 80,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        _selectedDate == null
+                            ? '날짜를 선택하지 않으셨습니다.'
+                            : '${DateFormat.y().format(_selectedDate)}년 ${DateFormat.M().format(_selectedDate)}월 ${DateFormat.d().format(_selectedDate)}일',
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: _presentDatePicker,
+                      child: Text(
+                        '[날짜 선택]',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.pinkAccent.shade200),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.amber,
+                  textStyle: const TextStyle(
+                    color: Colors.white,
+                  ),
+                  elevation: 5,
+                ),
+                onPressed: _submitData,
+                child: Text(
+                  '추가',
+                  style: Theme.of(context).primaryTextTheme.labelLarge,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
