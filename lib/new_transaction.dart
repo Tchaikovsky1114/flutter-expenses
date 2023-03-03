@@ -17,11 +17,18 @@ class _NewTransactionState extends State<NewTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
   dynamic _selectedDate;
+
   void _submitData() {
+    if (_amountController.text.isEmpty) {
+      return;
+    }
     final enteredTitle = _titleController.text;
     final enteredAmount = double.parse(_amountController.text);
-    if (enteredAmount <= 0 || enteredTitle.isEmpty) return;
-    widget.addTransactionHandler(enteredTitle, enteredAmount);
+    if (enteredAmount <= 0 || enteredTitle.isEmpty || _selectedDate == null) {
+      return;
+    }
+
+    widget.addTransactionHandler(enteredTitle, enteredAmount, _selectedDate);
     Navigator.of(context).pop();
   }
 
@@ -76,10 +83,12 @@ class _NewTransactionState extends State<NewTransaction> {
               height: 80,
               child: Row(
                 children: [
-                  Text(
-                    _selectedDate == null
-                        ? '날짜를 선택하지 않으셨습니다.'
-                        : DateFormat.yMd().format(_selectedDate),
+                  Expanded(
+                    child: Text(
+                      _selectedDate == null
+                          ? '날짜를 선택하지 않으셨습니다.'
+                          : '${DateFormat.y().format(_selectedDate)}년 ${DateFormat.M().format(_selectedDate)}월 ${DateFormat.d().format(_selectedDate)}일',
+                    ),
                   ),
                   TextButton(
                     onPressed: _presentDatePicker,

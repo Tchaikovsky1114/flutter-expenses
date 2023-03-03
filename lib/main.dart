@@ -9,7 +9,7 @@ import 'package:timezone/data/latest.dart' as tz;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
-  runApp(const MyApp());
+  runApp(const MaterialApp(home: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -22,15 +22,21 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   List<Transaction> userTransaction = [];
 
-  void _addNewTransaction(String txTitle, double amount) {
+  void _addNewTransaction(String txTitle, double amount, DateTime date) {
     final newTx = Transaction(
       id: DateTime.now().toString(),
       title: txTitle,
       amount: amount,
-      date: DateTime.now(),
+      date: date,
     );
     setState(() {
       userTransaction.add(newTx);
+    });
+  }
+
+  void _deleteTransaction(String id) {
+    setState(() {
+      userTransaction.removeWhere((tx) => tx.id == id);
     });
   }
 
@@ -53,6 +59,28 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final appBar = AppBar(
+      title: const Text(
+        'Expenses',
+        style: TextStyle(
+          fontFamily: 'Quicksand',
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      actions: [
+        Builder(
+          builder: (context) => IconButton(
+            onPressed: () => _startAddNewTransaction(context),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            icon: const Icon(
+              Icons.add_circle_outline_rounded,
+              size: 24,
+              color: Colors.red,
+            ),
+          ),
+        )
+      ],
+    );
     return MaterialApp(
       title: 'Expenses',
       theme: ThemeData(
@@ -84,37 +112,29 @@ class _MyAppState extends State<MyApp> {
           ),
           fontFamily: 'Wandohope'),
       home: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Expenses',
-            style: TextStyle(
-              fontFamily: 'Quicksand',
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          actions: [
-            Builder(
-              builder: (context) => IconButton(
-                onPressed: () => _startAddNewTransaction(context),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                icon: const Icon(
-                  Icons.add_circle_outline_rounded,
-                  size: 24,
-                ),
-              ),
-            )
-          ],
-        ),
+        appBar: appBar,
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                width: double.infinity,
+                height: (MediaQuery.of(context).size.height -
+                        MediaQuery.of(context).padding.top -
+                        appBar.preferredSize.height) *
+                    0.4,
                 child: Chart(_recentTransaction),
               ),
-              TransactionList(userTransaction: userTransaction)
+              SizedBox(
+                height: (MediaQuery.of(context).size.height -
+                        MediaQuery.of(context).padding.top -
+                        appBar.preferredSize.height) *
+                    0.6,
+                child: TransactionList(
+                  userTransaction: userTransaction,
+                  deleteTransaction: _deleteTransaction,
+                ),
+              )
             ],
           ),
         ),
