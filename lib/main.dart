@@ -9,7 +9,7 @@ import 'package:timezone/data/latest.dart' as tz;
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   tz.initializeTimeZones();
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
@@ -76,6 +76,10 @@ class _MyAppState extends State<MyApp> {
               color: Colors.grey.shade700,
               fontSize: 12,
               fontFamily: 'Quicksand',
+            ),
+            labelLarge: const TextStyle(
+              color: Colors.white,
+              fontSize: 20,
             ),
           ),
           fontFamily: 'Wandohope'),

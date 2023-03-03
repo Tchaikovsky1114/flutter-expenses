@@ -21,13 +21,11 @@ class Chart extends StatelessWidget {
           totalSum += recentTransaction[i].amount;
         }
       }
-      print(DateFormat.E().format(weekDay));
-      print(totalSum);
       return {
         'day': DateFormat.E().format(weekDay),
         'amount': totalSum,
       };
-    });
+    }).reversed.toList();
   }
 
   double get totalSpending {
@@ -53,7 +51,9 @@ class Chart extends StatelessWidget {
                   child: ChartBar(
                     data['day'] as String,
                     data['amount'] as double,
-                    (data['amount'] as double) / totalSpending,
+                    totalSpending == 0
+                        ? 0
+                        : (data['amount'] as double) / totalSpending,
                   ),
                 );
               }).toList()
